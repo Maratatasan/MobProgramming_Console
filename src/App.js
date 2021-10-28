@@ -16,17 +16,19 @@ function App() {
   const [message, setMessage] = useState('penis')
 
   useEffect(() => {
-    const myPromise = new Promise((res, rej)=> {
-      setTimeout(()=>{
-        res('Cau Pasule!')
-      }, 100)
-    })
 
-    myPromise.then(res => {setMessage(res)})
-    // fetch('http://localhost:8000/')
-    //   .then((res) => {
-    //     console.log(res)
-    //   })
+
+    // const myPromise = new Promise((res, rej)=> {
+    //   setTimeout(()=>{
+    //     res('Cau Pasule!')
+    //   }, 100)
+    // })
+
+    // myPromise.then(res => {setMessage(res)})
+    fetch('http://localhost:8000/')
+      .then((res) => {
+        console.log(res)
+      })
 
   }, [])
 
