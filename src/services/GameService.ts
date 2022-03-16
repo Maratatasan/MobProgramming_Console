@@ -1,21 +1,18 @@
 
-import axios, { AxiosPromise } from 'axios'
+import axios from 'axios'
 import SERVER_URL from '../types/endpoints';
+import { IGameService } from './GameServiceInterface';
 
-export class GameService {
+export class GameService implements IGameService {
 
-    constructor() {
-
-    }
-
-    public retrieve(): AxiosPromise<string[]> {
+    public retrieve(){
         return axios({
             method: 'get',
             url: SERVER_URL.GAME,
         });
     }
 
-    public create(game: string): AxiosPromise<string[]> {
+    public create(game: string) {
         return axios.post(
             SERVER_URL.GAME,
             {
