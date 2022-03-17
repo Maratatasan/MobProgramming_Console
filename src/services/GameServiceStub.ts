@@ -1,26 +1,34 @@
-// // NOT REALLY SURE WAGWAN HERE...- Bamdad
-
-// //TODO implement axios mock for stub
+//TODO implement axios mock for stub
 
 // import axios from 'axios'
 // import SERVER_URL from '../types/endpoints';
-// import { IGameService } from './GameServiceInterface';
-
-// export class GameService implements IGameService {
-
-//   public retrieve() {
+import { IGameService } from './GameServiceInterface';
 
 
-//         return
-//     }
 
-//     public create(game: string) {
-//         return axios.post(
-//             SERVER_URL.GAME,
-//             {
-//                 newGame: game
-//             });
-//     }
-// }
+export class GameServiceStub implements IGameService {
 
-export { };
+  allGames: string[] = [];
+
+  public retrieve(): Promise<string[]> {
+    return new Promise((resolve) => resolve(this.allGames))
+  }
+
+
+
+  public create(game: string): Promise<string[]> {
+    this.allGames.push(game);
+    console.log('from stub', this.allGames)
+
+    return new Promise((resolve, reject) => {
+      resolve(this.allGames)
+    })
+    //     return axios.post(
+    //         SERVER_URL.GAME,
+    //         {
+    //             newGame: game
+    //         });
+    }
+}
+
+// export { };
