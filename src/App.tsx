@@ -7,20 +7,10 @@ function App(props: any) {
   console.log("App", props);
   // {Object.keys(props.games)
   return <HomeComponent />;
+  // return <div>{JSON.stringify(props.games)}
+  
+  // <button onClick={()=>props.actions.addGame('Jeffs Paradise')}> add Game</button>
+  
+  // </div>
 }
-const actions = {
-  addGame(gameName: string) {
-    return {
-      type: "addGame",
-      payload: { gameName: "Abs" },
-    };
-  },
-};
-
-const mapStateToProps = (state: any) => ({ games: state.games });
-
-const mapDispatchToProps = (dispatch: any) => ({
-  actions: bindActionCreators(actions, dispatch),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App

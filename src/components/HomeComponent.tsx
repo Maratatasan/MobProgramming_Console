@@ -6,18 +6,22 @@ import { UserAndGamesServiceStub } from "../services/UserAndGamesServiceStub";
 import { GameService } from "../services/GameService";
 import { UserAndGamesService } from "../services/UserAndGamesService";
 import { GameServiceStub } from "../services/GameServiceStub";
-import store from "../state/GamesStore";
+import store, { fetchGamesMiddleware } from "../state/GamesStore";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 // from client, you should see a list of games
 // and select what game to want to play
 // register to the game with an input box for username
 
 const ENV_VARIABLE = process.env.REACT_APP_ENV_TYPE;
 
-console.log(ENV_VARIABLE === "dev");
+// console.log(ENV_VARIABLE === "dev");
 
- function HomeComponent() {
+function HomeComponent(props: any) {
   const newGameInputRef = useRef() as React.MutableRefObject<HTMLInputElement>;
   const [games, setGames] = useState<string[]>([]);
+
+  console.log("HomeComponent", props);
   // const gameService = useMemo(() => {
   //   if (ENV_VARIABLE === "dev") {
   //     return new GameServiceStub();
@@ -56,27 +60,31 @@ console.log(ENV_VARIABLE === "dev");
   // }, [])
 
   const onAddGame = () => {
-    gameService.create(newGameInputRef.current.value).then((response) => {
-      setGames([...response]);
-    });
+    console.log("onAddGame", newGameInputRef.current.value);
+// fetchGamesMiddleware(props.games, );
+    // gameService.create(newGameInputRef.current.value).then((response) => {
+      props.actions.addGame(newGameInputRef.current.value);
+    //   // setGames([...response]);
+    // });
+
+   
   };
 
   const registerUser = (game: string) => {
     userAndGamesService.associate(userName, game);
+    props.actions.associate(userName, game);
     // axios.post(SERVER_URL.USER_WITH_GAME,
     //   { userName, gameName: game }).then(response => {
     //     console.log(response.data);
     //   });
   };
-
+ 
   const makeListOfGames = (games: string[]) => {
     console.log("from make list");
     console.log("games to map over", games);
     return (
       <ul>
-        {games.map((game) => {
-          console.log(game);
-
+        {Object.keys(props.games).map((game) => {
           return (
             <div key={game}>
               <li>{game}</li>
@@ -96,12 +104,10 @@ console.log(ENV_VARIABLE === "dev");
     );
   };
 
-  
-
   return (
     <div className="App">
       <h1>{process.env.REACT_APP_ENV_TYPE}</h1>
-
+      {JSON.stringify(props.games)}
       <h1>Add Games</h1>
       <button onClick={onAddGame}>add</button>
       <input ref={newGameInputRef} type="text" placeholder="games" />
@@ -111,4 +117,25 @@ console.log(ENV_VARIABLE === "dev");
   );
 }
 
-export default HomeComponent;
+const actions = {
+  addGame(gameName: string) {
+    return {
+      type: "addGame",
+      payload: { gameName: gameName },
+    };
+  },
+  associate(userName: string, gameName: string) {
+    return {
+      type: "associate",
+      payload: { userName: userName, gameName: gameName },
+    };
+  },
+};
+
+const mapStateToProps = (state: any) => ({ games: state.games });
+
+const mapDispatchToProps = (dispatch: any) => ({
+  actions: bindActionCreators(actions, dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeComponent);
