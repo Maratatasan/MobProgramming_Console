@@ -16,19 +16,22 @@ export class GameServiceStub implements IGameService {
 
 
 
-  public create(game: string): Promise<string[]> {
+  public create(game: string): any {
     this.allGames.push(game);
-    console.log('from stub', this.allGames)
 
     return new Promise((resolve, reject) => {
-      resolve(this.allGames)
+      setTimeout(() => {
+        resolve(this.allGames)
+
+      }, 500);
+
     })
     //     return axios.post(
     //         SERVER_URL.GAME,
     //         {
     //             newGame: game
     //         });
-    }
+  }
 }
 
 // export { };

@@ -15,19 +15,12 @@ import { connect } from "react-redux";
 
 const ENV_VARIABLE = process.env.REACT_APP_ENV_TYPE;
 
-// console.log(ENV_VARIABLE === "dev");
-
 function HomeComponent(props: any) {
   const newGameInputRef = useRef() as React.MutableRefObject<HTMLInputElement>;
   const [games, setGames] = useState<string[]>([]);
 
-  console.log("HomeComponent", props);
-  // const gameService = useMemo(() => {
-  //   if (ENV_VARIABLE === "dev") {
-  //     return new GameServiceStub();
-  //   }
-  //   return new GameService();
-  // }, []);
+
+
   const gameService = useMemo(
     () => (ENV_VARIABLE === "dev" ? new GameServiceStub() : new GameService()),
     []
@@ -60,7 +53,6 @@ function HomeComponent(props: any) {
   // }, [])
 
   const onAddGame = () => {
-    console.log("onAddGame", newGameInputRef.current.value);
 // fetchGamesMiddleware(props.games, );
     // gameService.create(newGameInputRef.current.value).then((response) => {
       props.actions.addGame(newGameInputRef.current.value);
@@ -80,8 +72,6 @@ function HomeComponent(props: any) {
   };
  
   const makeListOfGames = (games: string[]) => {
-    console.log("from make list");
-    console.log("games to map over", games);
     return (
       <ul>
         {Object.keys(props.games).map((game) => {

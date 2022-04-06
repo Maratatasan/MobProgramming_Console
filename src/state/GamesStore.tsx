@@ -1,5 +1,6 @@
 import { createStore, applyMiddleware } from "redux";
 import { GameServiceStub } from "../services/GameServiceStub";
+import { UserAndGamesServiceStub } from "../services/UserAndGamesServiceStub";
 
 
 
@@ -9,14 +10,17 @@ const gameReducer = (
   state: any = { games: { lookOut5: ["abs"] } },
   action: any
 ) => {
-  console.log(action);
+  console.group(action.type);
+  console.log(action.payload);
+  console.groupEnd();
   switch (action.type) {
-    case "addGame":
-      return {
-        ...state,
-        games: { ...state.games, [action.payload.gameName]: [] },
-      };
-    //   return {...state, action.payload.gameName};
+    case "refreshGames":
+      // debugger;
+      // const games: any = {};
+      // action.payload.games.forEach((game: any) => {
+      //   games[game] = [];
+      // });
+      return { ...state, games: action.payload.games }
     case "associate":
       return {
         ...state,
@@ -35,27 +39,36 @@ const gameReducer = (
 
 
 export const fetchGamesMiddleware = (store: any) => (next: any) => (action: any) => {
-  console.log("fetchGamesMiddleware", store, next, action);
-  const gamesService = new GameServiceStub();
+
+
   if (action.type === "addGame") {
-    
-    gamesService.create(action.payload.gameName).then((response) => {
 
-      // add setTimeOut inside the create method, to test if redux store is actually updated AFTER the server store is updated
-      // might need to add next(action) inside the then function
+    const gamesService = new GameServiceStub();
+    gamesService.create(action.payload.gameName)
+      .then((response: any) => {
+        return next({
+          type: "refreshGames", payload: { games: { games: response } },
+        });
+      });
 
-      // store.dispatch({
-      //   type: "addGame",
-      //   payload: { gameName: action.payload.gameName },
-      // });
-    });
   }
-  return next(action);
+
+  if (action.type === "associate") {
+    const userAndGamesService = new UserAndGamesServiceStub();
+    userAndGamesService.associate(action.payload.userName, action.payload.gameName).then((response: any) => {
+      return next({
+        type: "refreshGames", payload: { games: response },
+      });
+    });
+
+  }
+
+  // return next(action);
 };
 
 const addGameMiddleware = applyMiddleware(fetchGamesMiddleware);
 
 
-const store = createStore(gameReducer,addGameMiddleware );
+const store = createStore(gameReducer, addGameMiddleware);
 
 export default store;
