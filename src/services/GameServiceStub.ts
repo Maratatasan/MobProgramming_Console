@@ -2,26 +2,33 @@
 
 // import axios from 'axios'
 // import SERVER_URL from '../types/endpoints';
+import { IStore } from '../reducers/rootReducer';
 import { IGameService } from './GameServiceInterface';
 
 
 
 export class GameServiceStub implements IGameService {
 
-  allGames: string[] = [];
 
-  public retrieve(): Promise<string[]> {
-    return new Promise((resolve) => resolve(this.allGames))
+
+  public retrieve(): Promise<IStore> {
+    return new Promise((resolve) => resolve({
+      games: {
+        callOfDuty: ['bam']
+      }
+    }))
   }
 
 
 
-  public create(game: string): any {
-    this.allGames.push(game);
-
+  public create(game: string): Promise<IStore> {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        resolve(this.allGames)
+        resolve({
+          games: {
+            [game]: []
+          }
+        })
 
       }, 500);
 

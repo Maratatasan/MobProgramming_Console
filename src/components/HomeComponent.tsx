@@ -6,7 +6,7 @@ import { UserAndGamesServiceStub } from "../services/UserAndGamesServiceStub";
 import { GameService } from "../services/GameService";
 import { UserAndGamesService } from "../services/UserAndGamesService";
 import { GameServiceStub } from "../services/GameServiceStub";
-import store, { fetchGamesMiddleware } from "../state/GamesStore";
+import store from "../state/GamesStore";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 // from client, you should see a list of games
@@ -53,7 +53,6 @@ function HomeComponent(props: any) {
   // }, [])
 
   const onAddGame = () => {
-// fetchGamesMiddleware(props.games, );
     // gameService.create(newGameInputRef.current.value).then((response) => {
       props.actions.addGame(newGameInputRef.current.value);
     //   // setGames([...response]);
