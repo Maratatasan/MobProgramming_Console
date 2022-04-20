@@ -37,7 +37,7 @@ function associateMiddleware(action: any, next: any) {
     const userAndGamesService = new UserAndGamesServiceStub();
     userAndGamesService.associate(action.payload.userName, action.payload.gameName).then((response: any) => {
         return next({
-            type: "refreshGames", payload: response,
+            type: REFRESH_GAMES_ACTION, payload: response,
         });
     });
 }
